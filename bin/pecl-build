@@ -101,9 +101,13 @@ main() {
     pecl_url=http://pecl.php.net/get
     url=$pecl_url/$package
 
-	build_dir=$base_dir/$package
+	extension=${package%-*}
+    version=${package##*-}
+    build_dir=$base_dir/$extension
 
     debug "url: $(green $url)"
+    debug "extension: $(green $extension)"
+    debug "version: $(green $version)"
     debug "build_dir: $(green $build_dir)"
 
     info "create build directory: $(green $build_dir)"
@@ -148,13 +152,13 @@ main() {
 
     content=
     if [ $is_zend ];then
-        content="zend_extension=$($phpconfig --extension-dir)/$package.so"
+        content="zend_extension=$($phpconfig --extension-dir)/$extension.so"
     else
-        content="extension=$package.so"
+        content="extension=$extension.so"
     fi
 
-    info "create $(green $ini_dir/$package.ini) file."
-    run echo "$content" \| tee $ini_dir/$package.ini
+    info "create $(green $ini_dir/$extension.ini) file."
+    run echo "$content" \| tee $ini_dir/$extension.ini
 }
 
 ## utility
